@@ -14,28 +14,31 @@
  var bug_x = 0;
  var bug_y = 0;
  var BugImg = new Image();
- BugImg.src = "https://s2js.com/img/etc/flappybird.png";         
+ BugImg.src = "https://s2js.com/img/etc/flappybird.png";         //putna bilde
 
  var melon_x = 0;
  var melon_y = 0;
  var MelonImg = new Image();
- MelonImg.src = "https://s2js.com/img/etc/burger.png";  
+ MelonImg.src = "https://s2js.com/img/etc/burger.png";  //burgera bilde
 
  var akmens_x = 0;
  var akmens_y = 0;
  var akmensImg = new Image();
- MelonImg.src = "https://s2js.com/img/etc/burger.png";  
+ akmensImg.src = "rock.png";  
 
- var score = 0;
+ var score = 0;             
  var melon_speed = 3;
  var melon_speed_x; 
+ var akmens_speed = 3;
+ var akmens_speed_x; 
+
  var FPS = 40;                        
- var time_remaining = 180;
+ var time_remaining = 180;    // sakot speli 180 sekundes
 
 
  function restart_game() {
      
-     time_remaining = 180;
+     time_remaining = 180;        //seit vins restartejot speli aiziet atpakal uz score 0 un laiks ir 180 sekundes un melon speed ari iet atpakal uz 3
      score = 0;
      melon_speed = 3;
      }
@@ -67,7 +70,7 @@
           ctx.textAlign="center";
           ctx.fillText("Game Over", myCanvas.width / 2, myCanvas.height / 2);  
           ctx.font = "bold 20px Arial";
-          ctx.fillText("Press S to play again", myCanvas.width / 2, (myCanvas.height / 2)+50);
+          ctx.fillText("Press S to play again", myCanvas.width / 2, (myCanvas.height / 2)+50);  //seit ir ta ka vins dara to lietu ka uzspiezot S spele restartejas
           ctx.textAlign="left";
           }
     else {
@@ -75,20 +78,33 @@
 
           melon_y = melon_y + melon_speed; 
           melon_x = melon_x + melon_speed_x;                            
+          akmens_y = akmens_y + akmens_speed;          // seit vini krit slipi
+          akmens_x = akmens_x + akmens_speed_x;                            
 
           if (melon_y > myCanvas.height) {                               
               melon_y= 0;                                                 
               melon_x= Math.random() * (myCanvas.width - MelonImg.width);
              melon_speed_x= Math.random() * 10 - 5; 
               }   
+              if (akmens_y > myCanvas.height) {                               
+              akmens_y= 0;                                                 
+              akmens_x= Math.random() * (myCanvas.width - akmensImg.width);
+             akmens_speed_x= Math.random() * 10 - 5;      
+              }   
           }
 
-    ctx.drawImage(MelonImg, melon_x, melon_y);                            
+          ctx.drawImage(MelonImg, melon_x, melon_y);                            
+          ctx.drawImage(akmensImg, akmens_x, akmens_y);                            
 
-    if (ImagesTouching(bug_x, bug_y, BugImg, melon_x, melon_y, MelonImg)) {  
-        score= score + 1;                                                    
-        melon_speed = melon_speed + 0.5;                                     
+          if (ImagesTouching(bug_x, bug_y, BugImg, melon_x, melon_y, MelonImg)) {  // izdara ta ka melone tiek apests
+        score= score + 1;                                                    // apedot augli +1 punkts
+        melon_speed = melon_speed + 0.5;     // seit vins krit katru x atrak                                
         melon_x= -MelonImg.width;                                            
+        }
+        if (ImagesTouching(bug_x, bug_y, BugImg, akmens_x, akmens_y, akmensImg)) {  // izdara ta ka akmens tiek apests
+        score= score - 1;                                                    // apedot akmeni minus 1 punkts
+        akmens_speed = akmens_speed + 2;                                     
+        akmens_x= -akmensImg.width;                                    // nezinu        
         }
     } 
 
@@ -96,7 +112,7 @@
 
 
  function MyKeyDownHandler (MyEvent) { 
-   if (MyEvent.keyCode == 37 && bug_x > 0) {bug_x = bug_x - 10;}                          
+   if (MyEvent.keyCode == 37 && bug_x > 0) {bug_x = bug_x - 10;}                          // sis viss ir bultinu definicijas skaitli un katra uztaisits ta ka vini kustas kur vajag
    if (MyEvent.keyCode == 39 && bug_x+BugImg.width < myCanvas.width) {bug_x = bug_x+10;} 
    if (MyEvent.keyCode == 38 && bug_y > 0) {bug_y = bug_y - 10;}
    if (MyEvent.keyCode == 40 && bug_y < myCanvas.height-BugImg.height) {bug_y = bug_y + 10;}
